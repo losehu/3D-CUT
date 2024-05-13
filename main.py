@@ -40,9 +40,11 @@ def get_bounds(mesh):
     # 获取网格在X轴和Z轴的边界
     x_min = np.min(mesh.vectors[:, :, 0])
     x_max = np.max(mesh.vectors[:, :, 0])
+    y_min = np.min(mesh.vectors[:, :, 1])
+    y_max = np.max(mesh.vectors[:, :, 1])
     z_min = np.min(mesh.vectors[:, :, 2])
     z_max = np.max(mesh.vectors[:, :, 2])
-    return x_min, x_max, z_min, z_max
+    return x_min, x_max,y_min, y_max, z_min, z_max
 
 
 def interpolate(p1, p2, z):
@@ -66,7 +68,7 @@ def check_dict(my_dict):
     return None,None
 
 
-def plot_slices(mesh, x_min, x_max, z_min, z_max, num_slices):
+def plot_slices(mesh, x_min, x_max, y_min,y_max,z_min, z_max, num_slices,fill_rate):
     # 在3D和2D视图上绘制网格的切片
     fig = plt.figure()
     delete_png_files('./cut')
@@ -76,7 +78,6 @@ def plot_slices(mesh, x_min, x_max, z_min, z_max, num_slices):
     plt.xlim(x_min, x_max)
     plt.ylim(z_min, z_max)
     colors = plt.cm.nipy_spectral(np.linspace(0, 1, num_slices))
-
     for idx, z in enumerate(np.linspace(z_min, z_max, num_slices)):  # 遍历每个z轴
         if idx == 0 or idx == num_slices - 1:
             continue
@@ -92,7 +93,7 @@ def plot_slices(mesh, x_min, x_max, z_min, z_max, num_slices):
         fig1, ax1 = plt.subplots()
         my_dict = []
         dict_excel=[]
-
+        total_gcode = []
 
         for segment in intersections:
             point1=round(segment[1][0],j),round( segment[1][1],j)
@@ -113,7 +114,7 @@ def plot_slices(mesh, x_min, x_max, z_min, z_max, num_slices):
 
 
         # print(my_dict)
-        circle_dict_make(my_dict,0.5)
+        circle_dict_make(my_dict,fill_rate,z,num_slices,x_min, x_max,y_min,y_max)
         rect = Rectangle((left_x, z), right_x - left_x, slice_thickness, color=colors[idx], linewidth=0, fill=True)
         ax2.add_patch(rect)
         ax1.set_title(f'z={z:.2f}')
@@ -140,10 +141,13 @@ def plot_slices(mesh, x_min, x_max, z_min, z_max, num_slices):
 
 # 如果直接运行这个脚本文件，则执行main函数
 if __name__ == "__main__":
+    with open("output.txt", "w") as file:  # Clear the file at the beginning
+        file.write("")  # This will clear the content of the file
     file_path = './零件2.STL'  # STL文件路径
     my_mesh = load_mesh(file_path)
     rotate_mesh(my_mesh, np.pi / 2)
-    x_min, x_max, z_min, z_max = get_bounds(my_mesh)
+    x_min, x_max,y_min,y_max, z_min, z_max = get_bounds(my_mesh)
     slice_thickness = 0.5
+    fill_rate=0.9
     num_slices = int((z_max - z_min) / slice_thickness) + 1
-    plot_slices(my_mesh, x_min, x_max, z_min, z_max, num_slices)
+    plot_slices(my_mesh, x_min, x_max,y_min,y_max, z_min, z_max, num_slices,fill_rate)

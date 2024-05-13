@@ -28,7 +28,7 @@ def divide_point(my_dict): #分离不同图形
     return all_num
 
 
-def fill_cut(my_dict, fill_rate):
+def fill_cut(my_dict, fill_rate,z,num_slices,x_min, x_max,y_min,y_max):
     my_dict1 = {}
     # print(my_dict)
     for key in my_dict:
@@ -36,7 +36,7 @@ def fill_cut(my_dict, fill_rate):
         # print(value)
         my_dict1[key] = value + [0]
     # print(divide_point(my_dict1))
-    input_point(divide_point(my_dict1), fill_rate)
+    input_point(divide_point(my_dict1), fill_rate,z,num_slices,x_min, x_max,y_min,y_max)
 
 
 def find_endpoint(edges, x, y):
@@ -47,7 +47,7 @@ def find_endpoint(edges, x, y):
     return None, None, None  # 如果没有找到匹配的边，返回None
 
 
-def circle_dict_make(edges, fill_rate): #将重复列表变有序字典
+def circle_dict_make(edges, fill_rate,z,num_slices,x_min, x_max,y_min,y_max): #将重复列表变有序字典
     my_dict1 = {}
     while len(edges) > 0:
         first_key1, first_key2, first_value1, first_value2, idx = edges[0][0], edges[0][1], edges[0][2], edges[0][3], 0
@@ -84,7 +84,7 @@ def circle_dict_make(edges, fill_rate): #将重复列表变有序字典
                 del edges[idx - 1]
             now_key1, now_key2 = now_value1, now_value2
 
-    fill_cut(my_dict1, fill_rate)
+    fill_cut(my_dict1, fill_rate,z,num_slices,x_min, x_max,y_min,y_max)
 
 
 # edge = [[0.0, -0.5, 0.0, -1.0], [0.0, -1.0, 0.0, -0.5], [0.0, 0.0, 0.0, -0.5], [0.0, -0.5, 0.0, 0.0],
