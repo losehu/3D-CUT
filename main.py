@@ -125,17 +125,19 @@ def plot_slices(mesh, x_min, x_max, y_min,y_max,z_min, z_max, num_slices,fill_ra
         plt.close(fig1)  # 关闭图像以节省内存
         # fill_cut(my_dict,0.5)
 
-    ax.set_title('3D View of Slices')
+    # ax.set_title('3D View of Slices')
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
-    ax2.set_title('2D View on X-Z Plane')
+    # ax2.set_title('2D View on X-Z Plane')
     ax2.set_xlabel('X')
     ax2.set_ylabel('Z')
+
     save_path = os.path.join(output_directory, f"3D.png")
-    fig.savefig(save_path)
+    fig.savefig(save_path,dpi=960)
     save_path = os.path.join(output_directory, f"2D.png")
-    fig2.savefig(save_path)
+    fig2.savefig(save_path,dpi=960)
+
     plt.show()
 
 
@@ -147,7 +149,9 @@ if __name__ == "__main__":
     my_mesh = load_mesh(file_path)
     rotate_mesh(my_mesh, np.pi / 2)
     x_min, x_max,y_min,y_max, z_min, z_max = get_bounds(my_mesh)
-    slice_thickness = 0.5
-    fill_rate=0.9
+    print(x_min- x_max,y_min-y_max, z_min- z_max)
+    slice_thickness = 0.25
+    fill_rate=0.5
     num_slices = int((z_max - z_min) / slice_thickness) + 1
+    print(num_slices)
     plot_slices(my_mesh, x_min, x_max,y_min,y_max, z_min, z_max, num_slices,fill_rate)

@@ -59,6 +59,8 @@ def plot_filled_polygons(polygons, grid_lines, fill_rate,x_min, x_max,y_min,y_ma
     fill_rate: 填充率，用于调整显示效果，虽然在这个函数中未直接使用。
     """
     fig, ax = plt.subplots()
+    plt.rcParams['figure.dpi'] = 300  # 用于显示的DPI
+
     ax.set_aspect('equal')
     # x_limit=x_max-x_min
     # y_limit=y_max-y_min
@@ -110,7 +112,7 @@ def generate_layer_gcode(polygons, grid_lines, layer_height, z_height):
     gcode.append(f"G0 Z{z_height:.3f} ; Move to layer height")  # Move Z-axis to the start of this layer
 
     # Convert points to G-code commands
-    def points_to_gcode(points, movement_type="G1", feedrate=1500):
+    def points_to_gcode(points, movement_type="G1", feedrate=1800):
         return [f"{movement_type} X{point[0]:.3f} Y{point[1]:.3f} F{feedrate}" for point in points]
 
     # Perimeters
